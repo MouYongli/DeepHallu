@@ -1,4 +1,4 @@
-# DeepHallu# Deep Foundation Models for Single Cell RNA Sequencing
+# DeepHallu: Deep Foundation Models for Single Cell RNA Sequencing
 
 This is official repo for "DeepHallu: Hallucination in Vision Language Models" by DBIS at RWTH Aachen University 
 [Yongli Mou*](mou@dbis.rwth-aachen.de), Jan Ebigt, Stefan Decker
