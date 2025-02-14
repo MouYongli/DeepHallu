@@ -7,7 +7,7 @@ This is official repo for "DeepHallu: Hallucination in Vision Language Models" b
 
 1. conda environment
 ```
-conda create --name deephallu python=3.11
+conda create --name deephallu python=3.10
 conda activate deephallu
 ```
 

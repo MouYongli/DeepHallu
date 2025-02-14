@@ -13,7 +13,7 @@ authors = [
 ]
 license = { text = "MIT" }
 readme = "README.md"  # Optional
-requires-python = ">=3.7"  # Adjust as needed
+requires-python = ">=3.8"  # Adjust as needed
 urls = { "Homepage" = "https://github.com/MouYongli/DeepHallu" }
 classifiers = [
     "Development Status :: 1 - Alpha",
