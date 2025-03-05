@@ -18,8 +18,7 @@ conda install ipykernel
 ```
 
 ```
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 # torch==2.5.1, torchvision==0.20.1, torchaudio==2.5.1
-pip install -r requirements.txt
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 # torch==2.6.0+cu124, torchaudio==2.6.0+cu124, torchvision==0.21.0+cu124
 pip install -e .
 ```
 
