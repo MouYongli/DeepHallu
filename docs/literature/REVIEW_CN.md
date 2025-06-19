@@ -1,18 +1,21 @@
 # 文献总结
 
+## 目录
+
+- [1. MoLE: Decoding by Mixture of Layer Experts Alleviates Hallucination in Large Vision-Language Models](#1-mole-decoding-by-mixture-of-layer-experts-alleviates-hallucination-in-large-vision-language-models)
+- [2. Alleviating Hallucinations in Large Vision-Language Models through Hallucination-Induced Optimization](#2-alleviating-hallucinations-in-large-vision-language-models-through-hallucination-induced-optimization)
+- [3. Analyzing and mitigating object hallucination in large vision-language models](#3-analyzing-and-mitigating-object-hallucination-in-large-vision-language-models)
+- [4. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding](#4-mitigating-object-hallucinations-in-large-vision-language-models-through-visual-contrastive-decoding)
+- [5. Mitigating Hallucination in Large Vision-Language Models via Modular Attribution and Intervention](#5-mitigating-hallucination-in-large-vision-language-models-via-modular-attribution-and-intervention)
+
+
+
+
 ## 1. MoLE: Decoding by Mixture of Layer Experts Alleviates Hallucination in Large Vision-Language Models
 
-- 会议：Thirty-Ninth AAAI Conference on Artificial Intelligence (AAAI-25)
-- 论文链接：https://arxiv.org/abs/2412.08000
-- 作者：
-    - Tian Liang — 浙江大学
-    - Yuetian Du — 浙江大学
-    - Jing Huang — 浙江大学
-    - Ming Kong — 浙江大学
-    - Luyuan Chen — 北京信息科技大学
-    - Yadong Li — 蚂蚁集团
-    - Siye Chen — 蚂蚁集团
-    - Qiang Zhu — 浙江大学（通讯作者）
+- 会议：AAAI-25
+- 论文链接：https://ojs.aaai.org/index.php/AAAI/article/view/34056
+- 作者：Tian Liang (Zhejiang University), Yuetian Du (Zhejiang University), Jing Huang (Zhejiang University), Ming Kong (Zhejiang University), Luyuan Chen (Beijing Information Science and Technology University), Yadong Li (Ant Group), Siye Chen (Ant Group), Qiang Zhu (Zhejiang University, corresponding author)
 
 - 主题和核心观点
     - 本文提出了一种名为 Mixture of Layer Experts (MoLE) 的无训练解码方法，通过利用大型视觉语言模型（LVLM）中不同层次的专家层协同工作，有效缓解了模型在多模态生成任务中出现的幻觉现象（hallucination），显著提升生成内容的准确性和一致性
@@ -32,28 +35,60 @@
 
 - 关键公式
     1. 最终专家概率分布
-    $$
-    p(x_t \mid P_T; x_{<t}) = \mathrm{SoftMax}\big(\phi(h^{(N)}_{t-1})\big)
-    $$
-    其中，$ h^{(N)}_{t-1} $ 是第 $N$ 层的输出，$\phi$ 是分类头。
+
+        给定一个prompt $P_T = [p_1, p_2, \cdots, p_T]$ (包括图像特征和文本指令token)和前 $t-1$ 个已经生成的token $x_{<t} = [x_1, x_2, \cdots, x_{t-1}]$。
+        将这些输入通过嵌入层得到 
+        $$
+        H^{(0)}=[h^{(0)}_{p_1}, h^{(0)}_{p_2}, \cdots, h^{(0)}_{p_T}, h^{(0)}_{x_1}, h^{(0)}_{x_2}, \cdots, h^{(0)}_{x_{t-1}}]
+        $$
+        然后通过 $N$ 层Transformer层得到 
+        $$
+        H^{(N)}=[h^{(N)}_{p_1}, h^{(N)}_{p_2}, \cdots, h^{(N)}_{p_T}, h^{(N)}_{x_1}, h^{(N)}_{x_2}, \cdots, h^{(N)}_{x_{t-1}}]
+        $$
+        最后通过分类头得到最终专家概率分布为：
+        $$
+        p(x_t \mid P_T; x_{<t}) = \mathrm{SoftMax}\big(\phi_{\mathrm{X}}(h^{(N)}_{t-1})\big)
+        $$
+        其中，$ h^{(N)}_{t-1} $ 是第 $N$ 层对第 $t-1$ 个token, 即$x_{t-1}$， 的输出；$\phi_{\mathrm{X}}$ 是分类头； $\mathrm{X}$ 是输出空间，即词汇表。
 
     2. 第二意见专家层选取依据（Jensen-Shannon散度）
-    $$
-    d(q_N, q_j) = \mathrm{JSD}\big(q_N \parallel q_j\big)
-    $$
-    通过计算第 $N$ 层（最终专家）和第 $j$ 层的logits分布的Jensen-Shannon散度。
+
+        先通过计算第 $N$ 层（最终专家）和第 $j$ 层的logits分布的Jensen-Shannon散度：
+        $$
+        d(q_N, q_j) = \mathrm{JSD}\big(q_N \parallel q_j\big)
+        $$
+        其中，$q_N$ 是第 $N$ 层（最终专家）的logits分布，$q_j$ 是第 $j$ 层的logits分布。
+
+        **__保证SOE层对关键token与大多数token的分歧与一致性__**：
+        关键token的Top-3选取基于Final Expert层的概率排名，选概率最大的3个token。计算各候选层在这3个token上的概率分布差异（JSD）。JSD越大，代表候选层与Final Expert在关键token上的观点越分歧。Second Opinion Expert会选出对关键token分歧最大且对大多数token一致的层。
+        $$
+        M_{j}^{topk} = \arg\max_{j} d(q_N^{topk}, q_j^{topk})
+        $$
+        对多数token，寻找与Final Expert一致性最高的层：
+        $$
+        M_{j}^{majority} = \arg\min_{j} d(q_N^{majority}, q_j^{majority})
+        $$
+    
+        $$
+        M_{j}^{SOE} = \begin{cases}
+            M_{j}^{topk}, & \text{if } M_{j}^{topk} = M_{j}^{majority} \\
+            -1, & \text{if } M_{j}^{topk} \neq M_{j}^{majority}
+        \end{cases}
+        $$
+
+        
 
     3. 提示保留专家权重随时间变化
-    $$
-    q_{PR} = \left(1 - e^{-\frac{t}{\lambda}}\right) \cdot q_{PR_t}
-    $$
-    随生成时间 $t$ 增加，提示保留专家层的权重逐渐增强，$\lambda$ 控制增长速率。
+        $$
+        q_{PR} = \left(1 - e^{-\frac{t}{\lambda}}\right) \cdot q_{PR_t}
+        $$
+        随生成时间 $t$ 增加，提示保留专家层的权重逐渐增强，$\lambda$ 控制增长速率。
 
     4. 最终解码概率融合
-    $$
-    p_{\mathrm{MoLE}} = \mathrm{SoftMax}\big(q_F + q_{SO} + q_{PR}\big)
-    $$
-    三个专家层的logits相加后进行归一化，得到最终预测概率。
+        $$
+        p_{\mathrm{MoLE}} = \mathrm{SoftMax}\big(q_F + q_{SO} + q_{PR}\big)
+        $$
+        三个专家层的logits相加后进行归一化，得到最终预测概率。
 
 - 方法详解
     - 模型结构：典型LVLM包括嵌入层、N个Transformer层、以及分类头。生成时，每个时间步将视觉特征和文本指令与已生成令牌编码后，经过所有层输出下一个令牌概率。
@@ -76,8 +111,6 @@
         - 在CHAIR指标上，MoLE降低幻觉率明显，如MiniGPT-4模型CHAIRI下降约21%。
         - 消融实验显示，三种专家层均有效减少幻觉，且引入的门控机制进一步提升性能。
         - 动态选层机制优于随机或静态选层，Prompt Retention专家权重随序列增长的设计合理有效。
-
-
 
 ## 2. Alleviating Hallucinations in Large Vision-Language Models through Hallucination-Induced Optimization
 
@@ -109,3 +142,33 @@
     其中，$ h^{(N)}_{t-1} $ 是第 $N$ 层的输出，$\phi$ 是分类头。
 
     2. 偏好模型
+
+
+
+## 3. Analyzing and mitigating object hallucination in large vision-language models
+
+- 会议：ICLR 2024
+
+- 作者：
+    - 
+
+- 主题和核心观点
+    - 本文针对大型视觉语言模型（LVLMs）在生成图像描述时出现的“对象幻觉”（即描述中包含图像中实际不存在的对象）问题，提出了一种轻量级、通用的后处理修正方法——LVLM Hallucination Revisor (LURE)，基于对幻觉产生的关键因素（共现性、不确定性和对象位置）的统计分析，显著降低了LVLM生成描述中的对象幻觉。
+
+- 研究背景与问题描述
+
+
+## 4. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding
+
+## 5. Mitigating Hallucination in Large Vision-Language Models via Modular Attribution and Intervention
+
+- 会议：NeurIPS 2024 Workshop
+
+- 作者：
+    - 
+
+- 主题和核心观点
+
+- 研究背景与问题描述
+
+- 创新点或新方法
