@@ -3,10 +3,7 @@
 ## 目录
 
 - [1. MoLE: Decoding by Mixture of Layer Experts Alleviates Hallucination in Large Vision-Language Models](#1-mole-decoding-by-mixture-of-layer-experts-alleviates-hallucination-in-large-vision-language-models)
-- [2. Alleviating Hallucinations in Large Vision-Language Models through Hallucination-Induced Optimization](#2-alleviating-hallucinations-in-large-vision-language-models-through-hallucination-induced-optimization)
-- [3. Analyzing and mitigating object hallucination in large vision-language models](#3-analyzing-and-mitigating-object-hallucination-in-large-vision-language-models)
-- [4. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding](#4-mitigating-object-hallucinations-in-large-vision-language-models-through-visual-contrastive-decoding)
-- [5. Mitigating Hallucination in Large Vision-Language Models via Modular Attribution and Intervention](#5-mitigating-hallucination-in-large-vision-language-models-via-modular-attribution-and-intervention)
+- [2. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding](#2-mitigating-object-hallucinations-in-large-vision-language-models-through-visual-contrastive-decoding)
 
 
 
@@ -76,8 +73,6 @@
         \end{cases}
         $$
 
-        
-
     3. 提示保留专家权重随时间变化
         $$
         q_{PR} = \left(1 - e^{-\frac{t}{\lambda}}\right) \cdot q_{PR_t}
@@ -112,63 +107,62 @@
         - 消融实验显示，三种专家层均有效减少幻觉，且引入的门控机制进一步提升性能。
         - 动态选层机制优于随机或静态选层，Prompt Retention专家权重随序列增长的设计合理有效。
 
-## 2. Alleviating Hallucinations in Large Vision-Language Models through Hallucination-Induced Optimization
+## 2. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding
 
-- 会议：NeurIPS 2024
+- 会议：CVPR 2024
 
-- 作者：
-    - Xinyu Lyu*	1. Southwestern University of Finance and Economics, Chengdu, China	xinyulyu68@gmail.com
-    - Beitao Chen*	2. Shenzhen Institute for Advanced Study, UESTC	chenbeitao@gmail.com
-    - Lianli Gao†	2. Shenzhen Institute for Advanced Study, UESTC	lianli.gao@uestc.edu.cn
-    - Jingkuan Song	2. Shenzhen Institute for Advanced Study, UESTC	jingkuan.song@gmail.com
-    - Heng Tao Shen	3. Center for Future Media, UESTC 4. Tongji University	shenhengtao@hotmail.com
+- 论文链接：https://openaccess.thecvf.com/content/CVPR2024/papers/Leng_Mitigating_Object_Hallucinations_in_Large_Vision-Language_Models_through_Visual_Contrastive_CVPR_2024_paper.pdf
+
+- 作者：Sicong Leng (Alibaba Group & NTU), Hang Zhang, Guanzheng Chen, Xin Li, Shijian Lu, Chunyan Miao, Lidong Bing	
 
 - 主题和核心观点
-    - 本文提出了一种名为“Hallucination-Induced Optimization (HIO)”的新优化策略，通过理论化的偏好模型增强幻觉与目标Token的对比，从而有效缓解大规模视觉语言模型（LVLMs）的幻觉问题，并在多项基准上超越了现有SOTA方法。
+    - 本文提出了一种名为Visual Contrastive Decoding (VCD)的训练free的方法，有效缓解大型视觉语言模型（LVLM）中的对象幻觉问题。VCD通过对比原始与失真视觉输入产生的输出概率分布，减少模型对统计偏差和语言先验的过度依赖，从而显著提升生成文本与视觉内容的一致性。实验验证表明，VCD在多个LVLM模型和基准数据集上均表现出明显优势，并增强了模型的视觉感知能力。
 
 - 研究背景与问题描述
-    - 大规模视觉语言模型（LVLMs）在多模态任务中表现出色，但在生成过程中经常出现幻觉，即生成与输入视觉内容或指令不符的内容，严重影响模型的可靠性和实用性。
-    - 现有的缓解幻觉方法多基于对比解码（contrastive decoding），通过构造“业余模型”（amateur models）与专家模型对比来过滤错误输出，存在计算开销大且效果受限的问题。
-    - 幻觉问题主要源于模型解码过程中的推理和事实信息注入环节，且随着生成序列长度增加，模型对原始提示的遗忘进一步加剧了幻觉。
+    - 研究背景
+        - 大型视觉语言模型（LVLMs）在融合视觉理解与自然语言生成方面取得重大进展，支持诸多实际应用场景。
+    - 问题描述
+        - 这些模型存在对象幻觉（object hallucination）问题，即生成的文本中包含图像中不存在的对象，造成内容与视觉输入不符。该问题主要源于训练数据的统计偏差及语言模型的先验偏好，影响模型的可靠性，特别是在医疗、自动驾驶等关键领域。
+    - 挑战
+        - 现有方法多依赖额外数据、复杂微调或外部模型，成本高且难以推广，急需简单高效的解决方案。
 
 - 创新点或新方法
-    - HIO 方法：通过理论化的偏好模型增强幻觉与目标Token的对比，从而有效缓解大规模视觉语言模型（LVLMs）的幻觉问题，并在多项基准上超越了现有SOTA方法。
+    - 视觉不确定性分析：首次系统分析视觉输入中不确定性（通过加噪声模拟失真）如何放大统计偏差和语言先验，导致幻觉加剧。
+    - Visual Contrastive Decoding (VCD)：提出一种无需额外训练的解码策略，通过对比原始与失真视觉输入的输出分布，校正模型过度依赖语言先验和统计偏差的倾向。
 
-- 关键公式
-    1. 偏好模型
-    $$
-    p(x_t \mid P_T; x_{<t}) = \mathrm{SoftMax}\big(\phi(h^{(N)}_{t-1})\big)
-    $$
-    其中，$ h^{(N)}_{t-1} $ 是第 $N$ 层的输出，$\phi$ 是分类头。
+    - 核心公式: 
+        $$
+        p_{vcd}(y \mid v, v', x) = \mathrm{SoftMax}\big[(1 + \alpha) \cdot \text{logit}_{\theta}(y \mid v, x) - \alpha \cdot \text{logit}_{\theta}(y \mid v', x)\big]
+        $$
+        其中，$v$ 为原始视觉输入，$v'$ 为失真视觉输入，$x$ 为文本提示，$\alpha$ 控制对比强度。该方法在保证语言合理性的基础上，剔除与失真输入相关的幻觉倾向。
 
-    2. 偏好模型
+- 方法详解
+    - 视觉不确定性分析：
+        - 在大型视觉语言模型（LVLMs）中，视觉输入 $v$ 对生成文本的准确性至关重要。视觉不确定性指的是视觉输入信号的不清晰或模糊，比如图像质量下降、遮挡、噪声等情况。当视觉输入变得不确定时，模型对视觉特征的编码能力下降，容易依赖语言模型中的语言先验（即对词语出现概率的先验假设）和训练数据中的统计偏差，从而增加“对象幻觉”（hallucination）的发生率。
+        - 论文采用了高斯噪声添加（Gaussian noise masking）这一简单而有效的方式来模拟视觉不确定性。通过在原始视觉输入图像上逐步加入高斯噪声，形成一系列从清晰到高度失真的图像序列。数学建模使用了**扩散过程（Diffusion Process）**的形式：
+            $$
+            q(v_t \mid v_{t-1}) = \mathcal{N}(v_t; \sqrt{1 - \gamma} \cdot v_{t-1}, \gamma \cdot I)
+            $$
+            其中，$v_t$ 是第 $t$ 步的失真图像，$v_{t-1}$ 是第 $t-1$ 步的图像，$\gamma$ 是高斯噪声方差，$I$ 是单位矩阵。
 
+- 关键实验、数据与案例
+    - 数据集和指标
+        - POPE: 面向对象存在性的问答评估，衡量幻觉准确性（Accuracy, Precision, Recall, F1）。
+        - MME: 多维度多模态模型评估，涵盖对象与属性级幻觉。
+        - LLaVA-Bench: 多样图像与问题的开放式生成评测。
 
+    - 实验结果
+        - VCD在POPE各设置（随机、流行、对抗）中均明显优于常规解码，最高提升7.4点F1。
+        - MME对象与属性幻觉显著减少，总分提升超过30分（如LLaVA-1.5）。
+        - LLaVA-Bench中案例显示VCD有效剔除“surfboard”等幻觉物体，输出更加符合视觉内容。
+        - GPT-4V辅助的开放式生成评价显示VCD提升生成文本的准确度与细节丰富度。
 
-## 3. Analyzing and mitigating object hallucination in large vision-language models
+    - 结论验证
+        - 视觉不确定性加剧幻觉问题，VCD有效缓解，且对模型的整体视觉理解能力有积极影响。
 
-- 会议：ICLR 2024
-
-- 作者：
-    - 
-
-- 主题和核心观点
-    - 本文针对大型视觉语言模型（LVLMs）在生成图像描述时出现的“对象幻觉”（即描述中包含图像中实际不存在的对象）问题，提出了一种轻量级、通用的后处理修正方法——LVLM Hallucination Revisor (LURE)，基于对幻觉产生的关键因素（共现性、不确定性和对象位置）的统计分析，显著降低了LVLM生成描述中的对象幻觉。
-
-- 研究背景与问题描述
-
-
-## 4. Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding
-
-## 5. Mitigating Hallucination in Large Vision-Language Models via Modular Attribution and Intervention
-
-- 会议：NeurIPS 2024 Workshop
-
-- 作者：
-    - 
-
-- 主题和核心观点
-
-- 研究背景与问题描述
-
-- 创新点或新方法
+- 总结与展望
+    - 本文深入揭示视觉不确定性对LVLM幻觉的影响，创新提出训练免费且高效的Visual Contrastive Decoding策略，实现了显著的幻觉缓解和视觉感知提升。   
+    - 局限与未来方向
+        - 目前采用的高斯噪声作为视觉扰动较为基础，未来可探索更细粒度如对象模糊的失真方法。
+        - 研究仅限于图像与文本LVLM，未来计划拓展至视频理解领域。
+        - VCD框架具备拓展性，可适配更多LVLM变体和更复杂采样策略。
