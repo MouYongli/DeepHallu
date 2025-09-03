@@ -5,19 +5,27 @@ Thank you for your interest in contributing to DeepHallu! This document provides
 ## Getting Started
 
 1. Fork the repository on GitHub
+
 2. Clone your fork locally:
    ```bash
    git clone https://github.com/your-username/DeepHallu.git
    cd DeepHallu
+   export PROJECT_ROOT=$(pwd)
    ```
-3. Create a virtual environment:
+3. Create a conda environment:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   conda create -n deephallu python=3.12
+   conda activate deephallu
    ```
-4. Install development dependencies:
+
+4. Install PyTorch according to your own compute configuration.
    ```bash
-   pip install -e ".[dev]"
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
+   ```
+
+5. Install development dependencies:
+   ```bash
+   pip install -e .
    ```
 
 ## Development Workflow
@@ -70,7 +78,7 @@ Thank you for your interest in contributing to DeepHallu! This document provides
 
 - Document all public functions, classes, and methods
 - Use Google-style docstrings
-- Update README.md if your changes affect the public API
+- Update README.md
 
 ## Issue Reporting
 

@@ -7,15 +7,19 @@ name = "deephallu"
 version = "0.1.0"
 description = "A deep learning framework for hallucination detection and mitigation"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 authors = [
-    {name = "Yongli Mou", email = ""},
+    {name = "Yongli Mou", email = "mou@dbis.rwth-aachen.de"},
+    {name = "Er Jin"},
+    {name = "Johannes Stegmaier"},
+    {name = "Shin'ichi Satoh"},
+    {name = "Stefan Decker"},
 ]
 keywords = [
     "deep-learning",
     "hallucination",
-    "detection",
+    "analysis",
     "mitigation",
     "machine-learning",
     "nlp",

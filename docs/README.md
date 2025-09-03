@@ -3,8 +3,6 @@
 This directory will contain comprehensive documentation for the DeepHallu project.
 
 ## Planned Documentation
-
-- **API Reference**: Complete documentation of all classes and functions
 - **Tutorials**: Step-by-step guides for common use cases
 - **Examples**: Jupyter notebooks demonstrating framework capabilities
 - **Research Notes**: Technical documentation on implemented algorithms
@@ -20,10 +18,7 @@ pip install -e ".[docs]"
 
 # Build HTML documentation
 cd docs
-make html
 
-# View documentation
-open _build/html/index.html
 ```
 
 ## Contributing to Documentation
