@@ -1,0 +1,47 @@
+datasets:
+  mme:
+    name: "MME Benchmark"
+    path: "/home/mou/Projects/DeepHallu/data/mme/MME_Benchmark_release_version"
+    type: "mme"
+    description: "MME (Multi-Modal Evaluation) benchmark with 14 categories"
+
+  # vqa_v2:
+  #   name: "VQA v2.0"
+  #   path: "/home/mou/Projects/DeepHallu/data/vqa_v2"
+  #   type: "vqa"
+  #   description: "Visual Question Answering v2.0 dataset"
+
+  # chair:
+  #   name: "CHAIR"
+  #   path: "/home/mou/Projects/DeepHallu/data/chair"
+  #   type: "chair"
+  #   description: "Caption Hallucination Assessment with Image Relevance"
+
+  # pope:
+  #   name: "POPE"
+  #   path: "/home/mou/Projects/DeepHallu/data/pope"
+  #   type: "pope"
+  #   description: "Polling-based Object Probing Evaluation"
+
+  # llava_bench:
+  #   name: "LLaVA Bench"
+  #   path: "/home/mou/Projects/DeepHallu/data/llava_bench"
+  #   type: "llava_bench"
+  #   description: "LLaVA evaluation benchmark"
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+
+cache:
+  redis_url: "redis://localhost:6379"
+  default_ttl: 3600
+
+models:
+  llava_next:
+    name: "LLaVA Next"
+    type: "huggingface"
+    description: "LLaVA Next model"
+    model_name: "llava-hf/llava-v1.6-mistral-7b-hf"
+    hf_home: "/DATA2/HuggingFace"

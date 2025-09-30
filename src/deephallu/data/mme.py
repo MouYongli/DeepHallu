@@ -1,0 +1,51 @@
+from curses import raw
+import os
+import os.path as osp
+import json
+import pandas as pd
+
+from PIL import Image
+from torch.utils.data import Dataset
+
+HERE = osp.dirname(osp.abspath(__file__))
+DATA_ROOT_PATH = osp.join(HERE, '..', '..', '..', 'data', 'mme')
+DATA_PATH = osp.join(DATA_ROOT_PATH, 'MME_Benchmark_release_version', 'MME_Benchmark')
+CATEGORIES = ['artwork', 'celebrity', 'code_reasoning', 'color', 'commonsense_reasoning', 'count', 'existence', 'landmark', 'numerical_calculation', 'OCR', 'position', 'posters', 'scene', 'text_translation']
+
+class MMEDataset(Dataset):
+    def __init__(self, data_path: str = None, categories: list = None):
+        if data_path is None:
+            self.data_path = DATA_PATH
+        else:
+            self.data_path = data_path
+        if categories is None:
+            self.categories = CATEGORIES
+        else:
+            self.categories = categories
+        qa_list = self.load_qa_list(self.categories)
+        self.data = pd.DataFrame(qa_list)
+    
+    def load_qa_list(self, categories: list = None):
+        """
+        Load the QA list from the data path.
+        """
+        qa_list = []
+        if osp.exists(osp.join(self.data_path, 'qa.json')):
+            with open(osp.join(self.data_path, 'qa.json'), 'r') as f:
+                qa_list = json.load(f)
+        else:
+            raise FileNotFoundError(f"QA list not found at {self.data_path}")
+        return qa_list
+
+    def __getitem__(self, idx):
+        item = self.data.iloc[idx]
+        image_path = osp.join(self.data_path, item['image_path'])
+        image = Image.open(image_path)
+        return image, item['id'], item['image_name'], item['category'], item['question'], item['answer']
+    
+    def __len__(self):
+        return len(self.data)
+    
+if __name__ == "__main__":
+    dataset = MMEDataset()
+    print(dataset[0])

@@ -49,8 +49,6 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
 pip install -e .  
 ```
 
-
-
 ## Quick Start
 
 Coming soon! This project is currently in the initial setup phase.

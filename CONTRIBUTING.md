@@ -12,6 +12,7 @@ Thank you for your interest in contributing to DeepHallu! This document provides
    cd DeepHallu
    export PROJECT_ROOT=$(pwd)
    ```
+
 3. Create a conda environment:
    ```bash
    conda create -n deephallu python=3.12
@@ -67,6 +68,23 @@ Thank you for your interest in contributing to DeepHallu! This document provides
 - We use [flake8](https://flake8.pycqa.org/) for linting
 - We use [mypy](https://mypy.readthedocs.io/) for type checking
 
+```toml
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "black>=21.0",
+    "isort>=5.0",
+    "flake8>=3.8",
+    "mypy>=0.900",
+    "pre-commit>=2.15",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme>=1.0",
+    "myst-parser>=0.15",
+]
+```
+
 ## Testing
 
 - All new code should include appropriate tests
@@ -98,5 +116,4 @@ Before implementing new features:
 ## Questions?
 
 If you have questions about contributing, please open an issue with the "question" label.
-
 Thank you for contributing to DeepHallu!

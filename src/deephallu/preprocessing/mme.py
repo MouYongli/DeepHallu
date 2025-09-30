@@ -11,6 +11,18 @@ DATA_ROOT_PATH = osp.join(HERE, '..', '..', '..', 'data', 'mme')
 DATA_PATH = osp.join(DATA_ROOT_PATH, 'MME_Benchmark_release_version', 'MME_Benchmark')
 CATEGORIES = ['artwork', 'celebrity', 'code_reasoning', 'color', 'commonsense_reasoning', 'count', 'existence', 'landmark', 'numerical_calculation', 'OCR', 'position', 'posters', 'scene', 'text_translation']
 
+"""
+MME Benchmark is a benchmark for multimodal large language models. This script is used to preprocess the data for the MME Benchmark.
+Save the QA list to the data path, which includes the following information:
+- id: int, the id of the question
+- category: str, the category of the question
+- image_name: str, the name of the image
+- image_format: str, the format of the image
+- image_path: str, the path to the image
+- question: str, the question
+- answer: str, the answer
+"""
+
 class MMEPreprocessor:
     """
     MME Preprocessor.
@@ -23,8 +35,12 @@ class MMEPreprocessor:
     def __init__(self, data_path: str = None, categories: list = None):
         if data_path is None:
             self.data_path = DATA_PATH
+        else:
+            self.data_path = data_path
         if categories is None:
             self.categories = CATEGORIES
+        else:
+            self.categories = categories
         self.qa_list = self.load_qa_list()
 
     def load_qa_list(self):
