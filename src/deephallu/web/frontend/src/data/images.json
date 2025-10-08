@@ -1,0 +1,102 @@
+[
+  {
+    "id": "mme_artwork_1",
+    "name": "339.jpg",
+    "path": "/examples/mme/artwork/339.jpg",
+    "category": "Artwork",
+    "dataset": "MME",
+    "resolution": "1484x800",
+    "format": "JPG",
+    "size": "245 KB",
+    "questions": [
+      {
+        "question": "Is this artwork displayed in staatliche museen, berlin? Please answer yes or no.",
+        "answer": "Yes"
+      },
+      {
+        "question": "Is this artwork displayed in national museum of religious carvings, valladolid? Please answer yes or no.",
+        "answer": "No"
+      }
+    ]
+  },
+  {
+    "id": "mme_artwork_2",
+    "name": "381.jpg",
+    "path": "/examples/mme/artwork/381.jpg",
+    "category": "Artwork",
+    "dataset": "MME",
+    "resolution": "900x1260",
+    "format": "JPG",
+    "size": "312 KB",
+    "questions": [
+      {
+        "question": "Does this artwork exist in the form of painting? Please answer yes or no.",
+        "answer": "Yes"
+      },
+      {
+        "question": "Does this artwork exist in the form of architecture? Please answer yes or no.",
+        "answer": "No"
+      }
+    ]
+  },
+  {
+    "id": "mme_artwork_3",
+    "name": "21580.jpg",
+    "path": "/examples/mme/artwork/21580.jpg",
+    "category": "Artwork",
+    "dataset": "MME",
+    "resolution": "1100x808",
+    "format": "JPG",
+    "size": "172 KB",
+    "questions": [
+      {
+        "question": "Is this artwork created by linard, jacques? Please answer yes or no.",
+        "answer": "Yes"
+      },
+      {
+        "question": "Is this artwork created by bonino da campione? Please answer yes or no.",
+        "answer": "No"
+      }
+    ]
+  },
+  {
+    "id": "mme_color_1",
+    "name": "000000006723.jpg",
+    "path": "/examples/mme/color/000000006723.jpg",
+    "category": "Color",
+    "dataset": "MME",
+    "resolution": "640x361",
+    "format": "JPG",
+    "size": "428 KB",
+    "questions": [
+      {
+        "question": "Is there a red brick building in the image? Please answer yes or no.",
+        "answer": "Yes"
+      },
+      {
+        "question": "Is there a yellow brick building in the image? Please answer yes or no.",
+        "answer": "No"
+      }
+    ]
+  },
+  {
+    "id": "mme_color_2",
+    "name": "000000008277.jpg",
+    "path": "/examples/mme/color/000000008277.jpg",
+    "category": "Color",
+    "dataset": "MME",
+    "resolution": "612x612",
+    "format": "JPG",
+    "size": "567 KB",
+    "questions": [
+      {
+        "question": "Is there a white plate in the image? Please answer yes or no.",
+        "answer": "Yes"
+      },
+      {
+        "question": "Is there a yellow plate in the image? Please answer yes or no.",
+        "answer": "No"
+      }
+    ]
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "generated_text": "No, the artwork is not created by Jacques-Louis David. The painting you've shown is 'Still Life with Fruit' by Willem Kalf, a Dutch still life painter.",
+  "vocabulary_samples": [
+    "the", "a", "an", "is", "are", "was", "were", "in", "on", "at",
+    "to", "of", "and", "or", "but", "this", "that", "image", "shows",
+    "depicts", "contains", "with", "has", "have", ",", ".", "can", "see",
+    "picture", "photo", "scene", "view", "display", "feature", "present"
+  ],
+  "token_config": {
+    "special_tokens": {
+      "start": "<s>",
+      "image_tag": "<image>",
+      "end": "</s>"
+    },
+    "image_token_count": 576,
+    "grid_size": {
+      "padded": {
+        "height": 14,
+        "width": 14
+      },
+      "unpadded": {
+        "height": 14,
+        "width": 14
+      }
+    }
+  },
+  "inference_config": {
+    "min_inference_time": 1500,
+    "max_inference_time": 3500
+  }
+}

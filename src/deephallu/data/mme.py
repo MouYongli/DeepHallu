@@ -22,20 +22,20 @@ class MMEDataset(Dataset):
             self.categories = CATEGORIES
         else:
             self.categories = categories
-        qa_list = self.load_qa_list(self.categories)
-        self.data = pd.DataFrame(qa_list)
+        preprocessed_data = self.load_preprocessed_data(self.categories)
+        self.data = pd.DataFrame(preprocessed_data)
     
-    def load_qa_list(self, categories: list = None):
+    def load_preprocessed_data(self, categories: list = None):
         """
         Load the QA list from the data path.
         """
-        qa_list = []
-        if osp.exists(osp.join(self.data_path, 'qa.json')):
-            with open(osp.join(self.data_path, 'qa.json'), 'r') as f:
-                qa_list = json.load(f)
+        preprocessed_data = []
+        if osp.exists(osp.join(self.data_path, 'preprocessed.json')):
+            with open(osp.join(self.data_path, 'preprocessed.json'), 'r') as f:
+                preprocessed_data = json.load(f)
         else:
-            raise FileNotFoundError(f"QA list not found at {self.data_path}")
-        return qa_list
+            raise FileNotFoundError(f"Preprocessed QA data not found at {self.data_path}")
+        return preprocessed_data
 
     def __getitem__(self, idx):
         item = self.data.iloc[idx]

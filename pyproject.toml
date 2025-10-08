@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "deephallu"
 version = "0.1.0"
-description = "A deep learning framework for hallucination detection and mitigation"
+description = "On the analysis and mitigation of hallucinations in vision language models"
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}

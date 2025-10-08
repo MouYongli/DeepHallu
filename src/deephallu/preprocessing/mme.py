@@ -41,16 +41,16 @@ class MMEPreprocessor:
             self.categories = CATEGORIES
         else:
             self.categories = categories
-        self.qa_list = self.load_qa_list()
+        self.preprocessed_data = self.load_json()
 
-    def load_qa_list(self):
+    def load_json(self):
         """
         Load the QA list from the data path.
         """
-        qa_list = []
-        if osp.exists(osp.join(self.data_path, 'qa.json')):
-            with open(osp.join(self.data_path, 'qa.json'), 'r') as f:
-                qa_list = json.load(f)
+        preprocessed_data = []
+        if osp.exists(osp.join(self.data_path, 'preprocessed.json')):
+            with open(osp.join(self.data_path, 'preprocessed.json'), 'r') as f:
+                preprocessed_data = json.load(f)
         else:
             idx = 0
             for category in self.categories:
@@ -66,7 +66,7 @@ class MMEPreprocessor:
                             for line in lines:
                                 question = line.split('\t')[0].strip()
                                 answer = line.split('\t')[1].strip()
-                                qa_list.append({
+                                preprocessed_data.append({
                                     'id': idx,
                                     'category': category,
                                     'image_name': image_name,
@@ -88,7 +88,7 @@ class MMEPreprocessor:
                             for line in lines:
                                 question = line.split('\t')[0].strip()
                                 answer = line.split('\t')[1].strip()
-                                qa_list.append({
+                                preprocessed_data.append({
                                     'id': idx,
                                     'category': category,
                                     'image_name': image_name,
@@ -98,18 +98,18 @@ class MMEPreprocessor:
                                     'answer': answer
                                 })
                                 idx += 1
-        return qa_list
+        return preprocessed_data
 
-    def save_qa_list(self):
+    def save_json(self):
         """
         Save the QA list to the data path.
         """
-        with open(osp.join(self.data_path, 'qa.json'), 'w') as f:
-            json.dump(self.qa_list, f, indent=2, ensure_ascii=False)
+        with open(osp.join(self.data_path, 'preprocessed.json'), 'w') as f:
+            json.dump(self.preprocessed_data, f, indent=2, ensure_ascii=False)
 
     def preprocess_data(self):
         pass
 
 if __name__ == "__main__":
     preprocessor = MMEPreprocessor()
-    preprocessor.save_qa_list()
+    preprocessor.save_json()

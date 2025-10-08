@@ -8,27 +8,21 @@ DeepHallu is a research project focused on analyzing and mitigating hallucinatio
 - Detecting hallucinations in VLM outputs
 - Implementing mitigation strategies
 - Evaluating model reliability with comprehensive benchmarks
-- Supporting research with multiple datasets (MME, VQA v2.0, CHAIR, POPE, LLaVA Bench)
+- Supporting multiple datasets (MME, VQA v2.0, CHAIR, POPE, LLaVA Bench)
 
 ## Environment Setup
 
-The project uses Python 3.12 with conda for environment management:
+The project uses Python 3.12 with conda for environment management and Pytorch 2.4.0 with CUDA 12.9 for deep learning framework and GPU acceleration:
 
 ```bash
 conda create -n deephallu python=3.12
 conda activate deephallu
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
-pip install -e .
+pip install -e . # Install package in development mode
 ```
-
-HuggingFace models are cached in `/DATA2/HuggingFace` (set via `HF_HOME` environment variable).
+HuggingFace models are cached in `/DATA2/HuggingFace` (set via `HF_HOME` environment variable) to avoid downloading models repeatedly.
 
 ## Common Development Commands
-
-### Package Management
-```bash
-pip install -e .                    # Install package in development mode
-```
 
 ### Code Quality
 ```bash
@@ -48,40 +42,46 @@ make clean                        # Remove cache files, build artifacts
 ## Architecture Overview
 
 ### Package Structure
-```
+```bash
 src/deephallu/
-├── __init__.py                   # Package initialization
 ├── data/                         # Dataset loaders and utilities
-│   ├── __init__.py
-│   └── mme.py                   # MME benchmark dataset loader
+│   └── mme.py                    # MME benchmark dataset loader
+├── preprocessing/                # Data preprocessing utilities
+|   └── mme.py                    # MME benchmark preprocessor
 ├── models/                       # VLM model implementations and analysis
-│   ├── llava_next.py           # LLaVA-Next model integration
-│   └── image_processor_analysis.py  # Image processing pipeline analysis
-└── preprocessing/               # Data preprocessing utilities
-    ├── __init__.py
-    └── mme.py                  # MME benchmark preprocessor
+│   └── llava_t2p_mapper.py       # LLaVA-Next token to patch mapper
+├── web/                          # Web application
+│   ├── frontend/                 # Frontend (Next.js)
+│   └── backend/                  # Backend (Python FastAPI)
+├── inference/                    # Notebooks
+│   └── infer.py                  # LLaVA-Next MME benchmark inference
+├── analytics/                    # Analytics
+│   └── run.py          # Analytics for LLaVA-Next on MME benchmark
+└── config/                       # Configuration
+    └── settings.py               # Configuration settings
 ```
 
 ### Key Components
 
 **Dataset Management:**
-- `MMEDataset`: PyTorch dataset for MME benchmark with 14 categories
 - `MMEPreprocessor`: Converts MME data structure to standardized JSON format
+- `MMEDataset`: PyTorch dataset for MME benchmark
 - Data path: `data/mme/MME_Benchmark_release_version/MME_Benchmark/`
 
 **VLM Integration:**
 - LLaVA-Next model integration with HuggingFace transformers
 - Image processor analysis for multi-scale processing (336x336 base resolution)
+- LLaVA-Next token to patch mapper for image-to-patch mapping
 - Support for various VLM architectures via notebooks
 
 **Research Workflow:**
-- Notebooks in `notebooks/` contain baseline implementations and benchmark evaluations
+- Notebooks in `notebooks/` contain exploratory analysis including baseline and benchmark
 - Each VLM (LLaVA, DeepSeek-VL2, Qwen2.5-VL) has dedicated baseline notebooks
 - Dataset exploration notebooks for each supported benchmark
 
 ### Data Flow
 
-1. **Preprocessing:** Raw benchmark data → standardized JSON format via preprocessing modules
+1. **Preprocessing:** Transform benchmark data to standardized JSON format via preprocessing modules
 2. **Loading:** Dataset classes load preprocessed data and return (image, metadata, question, answer) tuples
 3. **Model Processing:** Images processed through VLM-specific pipelines (e.g., multi-scale for LLaVA-Next)
 4. **Evaluation:** Model outputs compared against ground truth for hallucination analysis

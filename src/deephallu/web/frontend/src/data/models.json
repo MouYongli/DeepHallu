@@ -1,0 +1,29 @@
+[
+  {
+    "id": "llava-hf/llava-v1.6-mistral-7b-hf",
+    "name": "LLaVA-v1.6-Mistral-7B",
+    "parameters": "7B",
+    "memoryUsage": "14 GB",
+    "inferenceTime": "2.3s",
+    "accuracy": "78.4%",
+    "hallucinationRate": "12.1%"
+  },
+  {
+    "id": "deepseek-ai/deepseek-vl2",
+    "name": "DeepSeek-VL2",
+    "parameters": "13B",
+    "memoryUsage": "26 GB",
+    "inferenceTime": "4.1s",
+    "accuracy": "82.7%",
+    "hallucinationRate": "9.8%"
+  },
+  {
+    "id": "qwen/qwen2.5-vl-7b-instruct",
+    "name": "Qwen2.5-VL-7B-Instruct",
+    "parameters": "7B",
+    "memoryUsage": "14 GB",
+    "inferenceTime": "2.5s",
+    "accuracy": "86.2%",
+    "hallucinationRate": "7.3%"
+  }
+]
